@@ -1,0 +1,545 @@
+{
+  "users": [
+    {
+      "id": "usr_1",
+      "name": "John Doe",
+      "position": "Hotel Administrator",
+      "phone": "+1 555-0101",
+      "email": "admin@hotel.com",
+      "username": "admin",
+      "role": "Admin",
+      "status": "Active",
+      "passwordHash": "admin123",
+      "createdAt": "2026-01-01T08:00:00Z"
+    },
+    {
+      "id": "usr_2",
+      "name": "Sarah Connor",
+      "position": "Front Desk Receptionist",
+      "phone": "+1 555-0102",
+      "email": "reception@hotel.com",
+      "username": "receptionist",
+      "role": "Receptionist",
+      "status": "Active",
+      "passwordHash": "reception123",
+      "createdAt": "2026-01-05T09:30:00Z"
+    },
+    {
+      "id": "usr_3",
+      "name": "Michael Scott",
+      "position": "Head Accountant",
+      "phone": "+1 555-0103",
+      "email": "accounting@hotel.com",
+      "username": "accountant",
+      "role": "Accountant",
+      "status": "Active",
+      "passwordHash": "accountant123",
+      "createdAt": "2026-01-10T10:15:00Z"
+    }
+  ],
+  "roomCategories": [
+    {
+      "id": "cat_standard",
+      "name": "Standard Room",
+      "description": "Cozy and cost-effective room perfect for single travelers or couples.",
+      "basePrice": 80,
+      "amenities": [
+        "Queen Bed",
+        "Free Wi-Fi",
+        "Smart TV",
+        "Air Conditioning",
+        "Shower"
+      ]
+    },
+    {
+      "id": "cat_deluxe",
+      "name": "Deluxe Room",
+      "description": "Spacious room featuring modern design, high-end amenities, and city views.",
+      "basePrice": 130,
+      "amenities": [
+        "King Bed",
+        "Free Wi-Fi",
+        "Smart TV",
+        "Air Conditioning",
+        "Shower & Bath",
+        "Mini Fridge",
+        "Work Desk"
+      ]
+    },
+    {
+      "id": "cat_executive",
+      "name": "Executive Room",
+      "description": "Sophisticated design tailored for business executives, featuring lounge access.",
+      "basePrice": 190,
+      "amenities": [
+        "King Bed",
+        "Free Wi-Fi",
+        "4K Smart TV",
+        "Air Conditioning",
+        "Bathtub & Rain Shower",
+        "Mini Bar",
+        "Executive Desk",
+        "Coffee Machine"
+      ]
+    },
+    {
+      "id": "cat_suite",
+      "name": "Luxury Suite",
+      "description": "An elegant suite with a separate living room, dining area, and premium furnishings.",
+      "basePrice": 280,
+      "amenities": [
+        "King Bed & Sofa Bed",
+        "Separate Living Room",
+        "Free Wi-Fi",
+        "Two Smart TVs",
+        "Mini Bar",
+        "Private Balcony",
+        "Jacuzzi",
+        "24/7 Room Service"
+      ]
+    },
+    {
+      "id": "cat_presidential",
+      "name": "Presidential Suite",
+      "description": "The ultimate pinnacle of luxury. Massive layout, private butler service, and panoramic views.",
+      "basePrice": 500,
+      "amenities": [
+        "2 King Beds",
+        "Grand Living Area",
+        "Dining Table for 6",
+        "Fully Equipped Kitchenette",
+        "Panoramic Balcony",
+        "Private Jacuzzi",
+        "Personal Butler Service",
+        "Premium Sound System"
+      ]
+    }
+  ],
+  "rooms": [
+    {
+      "id": "rm_101",
+      "roomNumber": "101",
+      "categoryId": "cat_standard",
+      "floor": 1,
+      "capacity": 2,
+      "pricePerNight": 80,
+      "status": "Available",
+      "imageUrl": "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&q=80&w=600"
+    },
+    {
+      "id": "rm_102",
+      "roomNumber": "102",
+      "categoryId": "cat_standard",
+      "floor": 1,
+      "capacity": 2,
+      "pricePerNight": 80,
+      "status": "Available",
+      "imageUrl": "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&q=80&w=600"
+    },
+    {
+      "id": "rm_103",
+      "roomNumber": "103",
+      "categoryId": "cat_standard",
+      "floor": 1,
+      "capacity": 2,
+      "pricePerNight": 80,
+      "status": "Cleaning",
+      "imageUrl": "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&q=80&w=600"
+    },
+    {
+      "id": "rm_104",
+      "roomNumber": "104",
+      "categoryId": "cat_deluxe",
+      "floor": 1,
+      "capacity": 3,
+      "pricePerNight": 130,
+      "status": "Occupied",
+      "imageUrl": "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&q=80&w=600"
+    },
+    {
+      "id": "rm_105",
+      "roomNumber": "105",
+      "categoryId": "cat_deluxe",
+      "floor": 1,
+      "capacity": 3,
+      "pricePerNight": 130,
+      "status": "Available",
+      "imageUrl": "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&q=80&w=600"
+    },
+    {
+      "id": "rm_201",
+      "roomNumber": "201",
+      "categoryId": "cat_deluxe",
+      "floor": 2,
+      "capacity": 3,
+      "pricePerNight": 130,
+      "status": "Occupied",
+      "imageUrl": "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&q=80&w=600"
+    },
+    {
+      "id": "rm_202",
+      "roomNumber": "202",
+      "categoryId": "cat_executive",
+      "floor": 2,
+      "capacity": 2,
+      "pricePerNight": 190,
+      "status": "Available",
+      "imageUrl": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&q=80&w=600"
+    },
+    {
+      "id": "rm_203",
+      "roomNumber": "203",
+      "categoryId": "cat_executive",
+      "floor": 2,
+      "capacity": 2,
+      "pricePerNight": 190,
+      "status": "Maintenance",
+      "imageUrl": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&q=80&w=600"
+    },
+    {
+      "id": "rm_301",
+      "roomNumber": "301",
+      "categoryId": "cat_suite",
+      "floor": 3,
+      "capacity": 4,
+      "pricePerNight": 280,
+      "status": "Available",
+      "imageUrl": "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&q=80&w=600"
+    },
+    {
+      "id": "rm_302",
+      "roomNumber": "302",
+      "categoryId": "cat_presidential",
+      "floor": 3,
+      "capacity": 6,
+      "pricePerNight": 500,
+      "status": "Occupied",
+      "imageUrl": "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&q=80&w=600"
+    }
+  ],
+  "guests": [
+    {
+      "id": "gst_1",
+      "fullName": "Alice Smith",
+      "phone": "+1 555-0201",
+      "email": "alice@example.com",
+      "nationality": "USA",
+      "idType": "Passport",
+      "idNumber": "US87654321",
+      "address": "123 Pine St, New York, NY",
+      "emergencyContact": {
+        "name": "Bob Smith",
+        "phone": "+1 555-0202",
+        "relationship": "Spouse"
+      },
+      "createdAt": "2026-06-15T14:00:00Z"
+    },
+    {
+      "id": "gst_2",
+      "fullName": "Jean Dupont",
+      "phone": "+33 6 1234 5678",
+      "email": "jean.dupont@example.fr",
+      "nationality": "France",
+      "idType": "National ID",
+      "idNumber": "FR99887766",
+      "address": "45 Rue de la Paix, Paris",
+      "emergencyContact": {
+        "name": "Marie Dupont",
+        "phone": "+33 6 8765 4321",
+        "relationship": "Mother"
+      },
+      "createdAt": "2026-06-20T11:20:00Z"
+    },
+    {
+      "id": "gst_3",
+      "fullName": "Yuki Tanaka",
+      "phone": "+81 90-1234-5678",
+      "email": "yuki@example.jp",
+      "nationality": "Japan",
+      "idType": "Passport",
+      "idNumber": "JP11223344",
+      "address": "2-1-1 Nihonbashi, Chuo-ku, Tokyo",
+      "emergencyContact": {
+        "name": "Ken Tanaka",
+        "phone": "+81 90-8762-1144",
+        "relationship": "Brother"
+      },
+      "createdAt": "2026-06-25T16:45:00Z"
+    },
+    {
+      "fullName": "David Boadu-Dwamena",
+      "phone": "+233547938109",
+      "email": "boaddavid1@gmail.com",
+      "nationality": "gh",
+      "idType": "Passport",
+      "idNumber": "111",
+      "address": "manhean peace village",
+      "emergencyContact": {
+        "name": "David Boadu-Dwamena",
+        "phone": "+233547938109",
+        "relationship": ""
+      },
+      "id": "gst_1783698783060",
+      "createdAt": "2026-07-10T15:53:03.060Z"
+    }
+  ],
+  "reservations": [
+    {
+      "id": "res_1",
+      "guestId": "gst_1",
+      "bookingStatus": "Checked-in",
+      "checkInDate": "2026-07-08",
+      "checkOutDate": "2026-07-12",
+      "totalPrice": 520,
+      "paidAmount": 200,
+      "depositAmount": 200,
+      "createdAt": "2026-07-01T10:00:00Z",
+      "rooms": [
+        "rm_104"
+      ]
+    },
+    {
+      "id": "res_2",
+      "guestId": "gst_2",
+      "bookingStatus": "Checked-in",
+      "checkInDate": "2026-07-09",
+      "checkOutDate": "2026-07-14",
+      "totalPrice": 2500,
+      "paidAmount": 2500,
+      "depositAmount": 500,
+      "createdAt": "2026-07-02T15:30:00Z",
+      "rooms": [
+        "rm_302"
+      ]
+    },
+    {
+      "id": "res_3",
+      "guestId": "gst_3",
+      "bookingStatus": "Checked-in",
+      "checkInDate": "2026-07-15",
+      "checkOutDate": "2026-07-18",
+      "totalPrice": 390,
+      "paidAmount": 100,
+      "depositAmount": 100,
+      "createdAt": "2026-07-05T12:00:00Z",
+      "rooms": [
+        "rm_201"
+      ]
+    }
+  ],
+  "invoices": [
+    {
+      "id": "inv_1",
+      "reservationId": "res_1",
+      "invoiceNumber": "INV-2026-0001",
+      "issueDate": "2026-07-08",
+      "dueDate": "2026-07-12",
+      "subTotal": 520,
+      "taxAmount": 78,
+      "discountAmount": 0,
+      "grandTotal": 598,
+      "isPaid": false,
+      "createdAt": "2026-07-08T14:30:00Z"
+    },
+    {
+      "id": "inv_2",
+      "reservationId": "res_2",
+      "invoiceNumber": "INV-2026-0002",
+      "issueDate": "2026-07-09",
+      "dueDate": "2026-07-14",
+      "subTotal": 2500,
+      "taxAmount": 375,
+      "discountAmount": 100,
+      "grandTotal": 2775,
+      "isPaid": true,
+      "createdAt": "2026-07-09T11:15:00Z"
+    },
+    {
+      "reservationId": "res_3",
+      "issueDate": "2026-07-10",
+      "dueDate": "2026-07-18",
+      "subTotal": 390,
+      "taxAmount": 58.5,
+      "discountAmount": 0,
+      "grandTotal": 448.5,
+      "isPaid": false,
+      "id": "inv_1783701613646",
+      "invoiceNumber": "INV-2026-0003",
+      "createdAt": "2026-07-10T16:40:13.646Z"
+    }
+  ],
+  "invoiceItems": [
+    {
+      "id": "item_1_1",
+      "invoiceId": "inv_1",
+      "description": "Room 104 stay (4 nights x $130)",
+      "quantity": 4,
+      "unitPrice": 130,
+      "totalPrice": 520
+    },
+    {
+      "id": "item_2_1",
+      "invoiceId": "inv_2",
+      "description": "Room 302 stay (5 nights x $500)",
+      "quantity": 5,
+      "unitPrice": 500,
+      "totalPrice": 2500
+    },
+    {
+      "description": "Room accommodation charges (3 nights x 130)",
+      "quantity": 3,
+      "unitPrice": 130,
+      "id": "item_inv_1783701613646_0",
+      "invoiceId": "inv_1783701613646",
+      "totalPrice": 390
+    }
+  ],
+  "payments": [
+    {
+      "id": "pay_1",
+      "invoiceId": "inv_1",
+      "paymentMethod": "Card",
+      "amount": 200,
+      "paymentDate": "2026-07-08T14:35:00Z",
+      "referenceNumber": "REF9918231",
+      "notes": "Initial check-in security deposit"
+    },
+    {
+      "id": "pay_2",
+      "invoiceId": "inv_2",
+      "paymentMethod": "Bank Transfer",
+      "amount": 2775,
+      "paymentDate": "2026-07-09T11:20:00Z",
+      "referenceNumber": "TXN-FR-88910",
+      "notes": "Full payment on check-in"
+    },
+    {
+      "invoiceId": "inv_1783701613646",
+      "paymentMethod": "Cash",
+      "amount": 100,
+      "referenceNumber": "DEP-613646",
+      "notes": "Reservation Check-In Security Deposit",
+      "id": "pay_1783701613646",
+      "paymentDate": "2026-07-10T16:40:13.646Z"
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": "log_1783701787626",
+      "userId": "usr_1",
+      "username": "admin",
+      "action": "Login",
+      "details": "Successfully logged into the system.",
+      "timestamp": "2026-07-10T16:43:07.626Z"
+    },
+    {
+      "id": "log_1783701613646",
+      "userId": "usr_2",
+      "username": "receptionist",
+      "action": "Check-In Guest",
+      "details": "Checked-in reservation res_3 for guest gst_3. Recorded deposit of $100.",
+      "timestamp": "2026-07-10T16:40:13.646Z"
+    },
+    {
+      "id": "log_1783701352412",
+      "userId": "usr_2",
+      "username": "receptionist",
+      "action": "Login",
+      "details": "Successfully logged into the system.",
+      "timestamp": "2026-07-10T16:35:52.412Z"
+    },
+    {
+      "id": "log_1783698892339",
+      "userId": "usr_1",
+      "username": "admin",
+      "action": "Update Settings",
+      "details": "Updated hotel system settings.",
+      "timestamp": "2026-07-10T15:54:52.339Z"
+    },
+    {
+      "id": "log_1783698783060",
+      "userId": "usr_1",
+      "username": "admin",
+      "action": "Create Guest",
+      "details": "Registered guest David Boadu-Dwamena",
+      "timestamp": "2026-07-10T15:53:03.060Z"
+    },
+    {
+      "id": "log_1783698704968",
+      "userId": "usr_1",
+      "username": "admin",
+      "action": "Login",
+      "details": "Successfully logged into the system.",
+      "timestamp": "2026-07-10T15:51:44.968Z"
+    },
+    {
+      "id": "log_1",
+      "userId": "usr_1",
+      "username": "admin",
+      "action": "System Setup",
+      "details": "Initialized database default schema and values.",
+      "timestamp": "2026-01-01T08:00:00Z"
+    },
+    {
+      "id": "log_2",
+      "userId": "usr_2",
+      "username": "receptionist",
+      "action": "Booking Creation",
+      "details": "Created reservation res_1 for Alice Smith.",
+      "timestamp": "2026-07-01T10:05:00Z"
+    },
+    {
+      "id": "log_3",
+      "userId": "usr_2",
+      "username": "receptionist",
+      "action": "Check-in Guest",
+      "details": "Checked-in Alice Smith to Room 104.",
+      "timestamp": "2026-07-08T14:30:00Z"
+    }
+  ],
+  "settings": {
+    "hotelName": "harmony guest",
+    "hotelAddress": "Accra, Ghana",
+    "hotelPhone": "+233 54 793 8109",
+    "hotelEmail": "boaddavid1@gmail.com",
+    "taxRate": 0.15,
+    "currency": "GH₵",
+    "address": "manhean peace village",
+    "phone": "0547938109",
+    "email": "boaddavid1@gmail.com",
+    "website": "har.com",
+    "currencySymbol": "GH₵",
+    "vatTaxRate": 0
+  },
+  "notifications": [
+    {
+      "id": "ntf_1783701613647",
+      "message": "Check-in complete for Yuki Tanaka. Room is now occupied.",
+      "type": "success",
+      "isRead": false,
+      "timestamp": "2026-07-10T16:40:13.647Z"
+    },
+    {
+      "id": "ntf_1",
+      "message": "Guest Jean Dupont check-in is today (Room 302)",
+      "type": "info",
+      "isRead": true,
+      "timestamp": "2026-07-09T08:00:00Z"
+    },
+    {
+      "id": "ntf_2",
+      "message": "Security deposit payment of $200 recorded for Alice Smith",
+      "type": "success",
+      "isRead": true,
+      "timestamp": "2026-07-08T14:35:00Z"
+    },
+    {
+      "id": "ntf_3",
+      "message": "Room 203 is marked for Maintenance",
+      "type": "warning",
+      "isRead": true,
+      "timestamp": "2026-07-10T08:00:00Z"
+    }
+  ],
+  "expenses": []
+}
