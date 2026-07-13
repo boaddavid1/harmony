@@ -27,6 +27,7 @@ export default function BillingView({ user, currency }: BillingViewProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterPaid, setFilterPaid] = useState<string>('All');
+  const [settings, setSettings] = useState<any>(null);
 
   // Selected Invoice Modal / Folio Printout
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
@@ -61,11 +62,13 @@ export default function BillingView({ user, currency }: BillingViewProps) {
       const resData = await apiFetch('/api/reservations');
       const guestsData = await apiFetch('/api/guests');
       const expData = await apiFetch('/api/expenses').catch(() => []);
+      const settingsData = await apiFetch('/api/settings').catch(() => null);
       setInvoices(invData);
       setPayments(payData);
       setReservations(resData);
       setGuests(guestsData);
       setExpenses(expData);
+      setSettings(settingsData);
     } catch (e) {
       console.error(e);
     } finally {
@@ -544,10 +547,12 @@ export default function BillingView({ user, currency }: BillingViewProps) {
                   {/* Brand billing block */}
                   <div className="border-b border-slate-200 pb-4 flex justify-between items-start">
                     <div>
-                      <h4 className="text-sm font-bold text-slate-900 font-display">Grand Horizon Resort & Spa</h4>
+                      <h4 className="text-sm font-bold text-slate-900 font-display">
+                        {settings?.hotelName || 'Grand Horizon Resort & Spa'}
+                      </h4>
                       <p className="text-[10px] text-slate-400 leading-normal mt-0.5">
-                        777 Ocean Breeze Blvd, Miami, FL<br />
-                        Phone: (305) 555-9000
+                        {settings?.address || '777 Ocean Breeze Breeze Blvd, Miami, FL'}<br />
+                        Phone: {settings?.phone || '(305) 555-9000'}
                       </p>
                     </div>
                     <div className="text-right">

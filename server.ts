@@ -451,6 +451,78 @@ app.delete('/api/expenses/:id', authenticateToken, requireRole(['Admin', 'Accoun
   }
 });
 
+// 8.6 Shift Handover API
+app.get('/api/shift-handovers', authenticateToken, (req, res) => {
+  res.json(db.getShiftHandovers());
+});
+
+app.post('/api/shift-handovers', authenticateToken, (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { toRole, notes, tasks } = req.body;
+    if (!notes) {
+      res.status(400).json({ error: 'General notes are required' });
+      return;
+    }
+    const handover = db.createShiftHandover({
+      fromUserId: req.user!.id,
+      fromUserName: req.user!.name,
+      fromUserRole: req.user!.role,
+      toRole: toRole || 'All',
+      notes,
+      tasks: tasks || [],
+      status: 'Active'
+    });
+    db.createAuditLog(
+      req.user!.id,
+      req.user!.username,
+      'Create Shift Handover',
+      `Created shift handover note targeting: ${toRole || 'All'}`
+    );
+    res.status(201).json(handover);
+  } catch (e: any) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+app.put('/api/shift-handovers/:id', authenticateToken, (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const updated = db.updateShiftHandover(req.params.id, req.body);
+    if (!updated) {
+      res.status(404).json({ error: 'Shift handover not found' });
+      return;
+    }
+    db.createAuditLog(
+      req.user!.id,
+      req.user!.username,
+      'Update Shift Handover',
+      `Updated shift handover ID: ${req.params.id}`
+    );
+    res.json(updated);
+  } catch (e: any) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+app.post('/api/shift-handovers/:id/acknowledge', authenticateToken, (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const updated = db.acknowledgeShiftHandover(req.params.id, req.user!.id);
+    if (!updated) {
+      res.status(404).json({ error: 'Shift handover not found' });
+      return;
+    }
+    db.createAuditLog(
+      req.user!.id,
+      req.user!.username,
+      'Acknowledge Shift Handover',
+      `Acknowledged shift handover ID: ${req.params.id}`
+    );
+    res.json(updated);
+  } catch (e: any) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+
 // 9. Staff / User Management API
 app.get('/api/staff', authenticateToken, requireRole(['Admin']), (req, res) => {
   res.json(db.getUsers());
@@ -491,6 +563,18 @@ app.delete('/api/staff/:id', authenticateToken, requireRole(['Admin']), (req: Au
 });
 
 // 10. Settings API
+app.get('/api/public/settings', (req, res) => {
+  const settings = db.getSettings();
+  res.json({
+    hotelName: settings.hotelName,
+    currencySymbol: settings.currency,
+    address: settings.hotelAddress,
+    phone: settings.hotelPhone,
+    email: settings.hotelEmail,
+    website: settings.website || ''
+  });
+});
+
 app.get('/api/settings', authenticateToken, (req, res) => {
   const settings = db.getSettings();
   res.json({

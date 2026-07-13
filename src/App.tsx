@@ -16,6 +16,7 @@ import ReportsView from './components/ReportsView';
 import StaffView from './components/StaffView';
 import AuditView from './components/AuditView';
 import SettingsView from './components/SettingsView';
+import ShiftHandoverView from './components/ShiftHandoverView';
 import { User } from './types';
 import { apiFetch, authApi } from './api_client';
 
@@ -25,6 +26,14 @@ export default function App() {
   const [currency, setCurrency] = useState('$');
   const [hotelName, setHotelName] = useState('Grand Horizon Resort');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  useEffect(() => {
+    if (hotelName) {
+      document.title = `${hotelName} - PMS Portal`;
+    } else {
+      document.title = 'Grand Horizon Resort & Spa - PMS Portal';
+    }
+  }, [hotelName]);
 
   const fetchSession = async () => {
     try {
@@ -68,11 +77,7 @@ export default function App() {
   };
 
   if (!user) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center font-sans">
-        <LoginView onLoginSuccess={handleLoginSuccess} />
-      </div>
-    );
+    return <LoginView onLoginSuccess={handleLoginSuccess} />;
   }
 
   const handleSearchResultClick = (type: string, id: string) => {
@@ -90,6 +95,8 @@ export default function App() {
     switch (currentView) {
       case 'dashboard':
         return <DashboardView user={user} currency={currency} onNavigateToView={setCurrentView} />;
+      case 'handover':
+        return <ShiftHandoverView user={user} currency={currency} />;
       case 'rooms':
         return <RoomsView user={user} currency={currency} />;
       case 'categories':

@@ -58,5 +58,32 @@ export const authApi = {
     } catch {
       return null;
     }
+  },
+  getPublicSettings: async () => {
+    return apiFetch('/api/public/settings');
   }
 };
+
+export const shiftHandoverApi = {
+  list: async () => {
+    return apiFetch('/api/shift-handovers');
+  },
+  create: async (handover: { toRole: string; notes: string; tasks: any[] }) => {
+    return apiFetch('/api/shift-handovers', {
+      method: 'POST',
+      body: JSON.stringify(handover)
+    });
+  },
+  update: async (id: string, updates: any) => {
+    return apiFetch(`/api/shift-handovers/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(updates)
+    });
+  },
+  acknowledge: async (id: string) => {
+    return apiFetch(`/api/shift-handovers/${id}/acknowledge`, {
+      method: 'POST'
+    });
+  }
+};
+

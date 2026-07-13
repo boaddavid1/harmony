@@ -23,6 +23,19 @@ export default function ReportsView({ user, currency }: ReportsViewProps) {
   const [endDate, setEndDate] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [reportData, setReportData] = useState<any>(null);
+  const [settings, setSettings] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const data = await apiFetch('/api/settings');
+        setSettings(data);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchSettings();
+  }, []);
 
   const EXPENSE_COLORS = [
     '#f59e0b', // Amber (Utilities)
@@ -171,7 +184,7 @@ export default function ReportsView({ user, currency }: ReportsViewProps) {
           
           {/* Print only header */}
           <div className="hidden print:block border-b border-slate-200 pb-4 mb-6">
-            <h1 className="text-xl font-bold">Grand Horizon Hotel System Audit Statement</h1>
+            <h1 className="text-xl font-bold">{settings?.hotelName || 'Grand Horizon'} Hotel System Audit Statement</h1>
             <p className="text-xs text-slate-500 mt-1">
               Report type: <span className="font-bold uppercase font-mono">{reportType}</span> &bull; Period: {startDate} to {endDate}
             </p>

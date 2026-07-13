@@ -146,3 +146,24 @@ export interface Expense {
   attachmentName?: string; // name of the attached receipt file
 }
 
+export interface HandoverTask {
+  id: string;
+  description: string;
+  status: 'Pending' | 'In Progress' | 'Completed';
+  notes?: string;
+}
+
+export interface ShiftHandover {
+  id: string;
+  fromUserId: string;
+  fromUserName: string;
+  fromUserRole: UserRole;
+  toRole?: UserRole | 'All';
+  notes: string;
+  tasks: HandoverTask[];
+  status: 'Active' | 'Completed';
+  createdAt: string;
+  acknowledgedBy: string[];
+}
+
+

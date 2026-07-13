@@ -8,7 +8,8 @@ import path from 'path';
 import { 
   User, RoomCategory, Room, Guest, Reservation, Invoice, 
   InvoiceItem, Payment, AuditLog, SystemSetting, Notification,
-  UserRole, RoomStatus, BookingStatus, PaymentMethod, Expense
+  UserRole, RoomStatus, BookingStatus, PaymentMethod, Expense,
+  ShiftHandover, HandoverTask
 } from './src/types';
 
 const DB_FILE = path.join(process.cwd(), 'data', 'db.json');
@@ -296,6 +297,23 @@ const DEFAULT_DATA = {
       recordedBy: 'Sarah Connor',
       createdAt: '2026-07-09T14:15:00Z'
     }
+  ],
+  shiftHandovers: [
+    {
+      id: 'ho_1',
+      fromUserId: 'usr_2',
+      fromUserName: 'Sarah Connor',
+      fromUserRole: 'Receptionist' as UserRole,
+      toRole: 'All' as const,
+      notes: 'Morning shift went smoothly. Handed over cash box with exactly GH₵1,500. Room 104 requested late checkout at 1:00 PM.',
+      tasks: [
+        { id: 't1', description: 'Confirm Room 104 check-out at 1:00 PM', status: 'Pending' as const },
+        { id: 't2', description: 'Verify card reader receipt batch terminal', status: 'Completed' as const, notes: 'Done, match printed' }
+      ],
+      status: 'Active' as const,
+      createdAt: '2026-07-10T12:00:00Z',
+      acknowledgedBy: []
+    }
   ]
 };
 
@@ -322,6 +340,7 @@ interface DatabaseData {
   };
   notifications: Notification[];
   expenses: Expense[];
+  shiftHandovers: ShiftHandover[];
 }
 
 class Database {
@@ -340,6 +359,9 @@ class Database {
         this.data = JSON.parse(fileContent);
         if (!this.data.expenses) {
           this.data.expenses = [];
+        }
+        if (!this.data.shiftHandovers) {
+          this.data.shiftHandovers = [];
         }
         if (this.data.settings) {
           if (!this.data.settings.currency || this.data.settings.currency === '$') {
@@ -932,6 +954,56 @@ class Database {
     this.data.expenses = filtered;
     this.save();
     return true;
+  }
+
+  // --- Shift Handovers ---
+  getShiftHandovers() {
+    return this.data.shiftHandovers || [];
+  }
+
+  createShiftHandover(handover: Omit<ShiftHandover, 'id' | 'createdAt' | 'acknowledgedBy'>) {
+    const newHandover: ShiftHandover = {
+      ...handover,
+      id: 'ho_' + Date.now(),
+      createdAt: new Date().toISOString(),
+      acknowledgedBy: []
+    };
+    if (!this.data.shiftHandovers) {
+      this.data.shiftHandovers = [];
+    }
+    this.data.shiftHandovers.push(newHandover);
+    this.save();
+    return newHandover;
+  }
+
+  updateShiftHandover(id: string, updates: Partial<ShiftHandover>) {
+    if (!this.data.shiftHandovers) {
+      this.data.shiftHandovers = [];
+    }
+    const idx = this.data.shiftHandovers.findIndex(h => h.id === id);
+    if (idx === -1) return null;
+
+    this.data.shiftHandovers[idx] = {
+      ...this.data.shiftHandovers[idx],
+      ...updates
+    };
+    this.save();
+    return this.data.shiftHandovers[idx];
+  }
+
+  acknowledgeShiftHandover(id: string, userId: string) {
+    if (!this.data.shiftHandovers) {
+      this.data.shiftHandovers = [];
+    }
+    const idx = this.data.shiftHandovers.findIndex(h => h.id === id);
+    if (idx === -1) return null;
+
+    const handover = this.data.shiftHandovers[idx];
+    if (!handover.acknowledgedBy.includes(userId)) {
+      handover.acknowledgedBy.push(userId);
+    }
+    this.save();
+    return handover;
   }
 
   // --- Statistics Analytics ---

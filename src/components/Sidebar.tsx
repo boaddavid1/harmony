@@ -7,7 +7,7 @@ import React from 'react';
 import { 
   LayoutDashboard, CalendarRange, Key, LogOut, Users, 
   BedDouble, Tag, CreditCard, BarChart3, ShieldCheck, 
-  Settings, UserSquare2, ShieldAlert
+  Settings, UserSquare2, ShieldAlert, ClipboardCheck
 } from 'lucide-react';
 import { User } from '../types';
 
@@ -24,6 +24,7 @@ export default function Sidebar({ currentView, onViewChange, user, onLogout, hot
 
   const menuItems = [
     { id: 'dashboard', name: 'Dashboard', icon: LayoutDashboard, roles: ['Admin', 'Receptionist', 'Accountant'] },
+    { id: 'handover', name: 'Shift Handover', icon: ClipboardCheck, roles: ['Admin', 'Receptionist', 'Accountant'] },
     { id: 'reservations', name: 'Reservations', icon: CalendarRange, roles: ['Admin', 'Receptionist'] },
     { id: 'checkin', name: 'Check-In', icon: Key, roles: ['Admin', 'Receptionist'] },
     { id: 'checkout', name: 'Check-Out', icon: LogOut, roles: ['Admin', 'Receptionist'] },
