@@ -1,6 +1,6 @@
 {
   "name": "Hotel Management System",
   "description": "A comprehensive, professional Hotel Management System featuring interactive reservations, check-in/out, guests, room status management, billing, interactive reports, and role-based staff access.",
-  "requestFramePermissions": [],
+  "requestFramePermissions": ["camera"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

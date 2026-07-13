@@ -6,7 +6,8 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Users, Plus, Search, Edit2, Trash2, History, ChevronRight, 
-  MapPin, ShieldAlert, Phone, Mail, UserCheck, X, RefreshCw, Calendar, CreditCard
+  MapPin, ShieldAlert, Phone, Mail, UserCheck, X, RefreshCw, Calendar, CreditCard,
+  Camera, Upload
 } from 'lucide-react';
 import { Guest, User } from '../types';
 import { apiFetch } from '../api_client';
@@ -45,6 +46,10 @@ export default function GuestsView({ user, currency }: GuestsViewProps) {
   const [idType, setIdType] = useState('Passport');
   const [idNumber, setIdNumber] = useState('');
   const [address, setAddress] = useState('');
+  const [photoUrl, setPhotoUrl] = useState('');
+  const [isCameraActive, setIsCameraActive] = useState(false);
+  const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
+  const videoRef = React.useRef<HTMLVideoElement>(null);
   
   // Emergency Contact Sub-fields
   const [emergencyName, setEmergencyName] = useState('');
@@ -52,6 +57,62 @@ export default function GuestsView({ user, currency }: GuestsViewProps) {
   const [emergencyRelationship, setEmergencyRelationship] = useState('');
 
   const [errorMessage, setErrorMessage] = useState('');
+
+  const startCamera = async () => {
+    setIsCameraActive(true);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { width: 320, height: 320, facingMode: 'user' } 
+      });
+      setCameraStream(stream);
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+    } catch (err) {
+      console.error('Error accessing camera:', err);
+      setErrorMessage('Could not access device camera. Please check permissions.');
+      setIsCameraActive(false);
+    }
+  };
+
+  const stopCamera = () => {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(track => track.stop());
+      setCameraStream(null);
+    }
+    setIsCameraActive(false);
+  };
+
+  const capturePhoto = () => {
+    if (videoRef.current) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 320;
+      canvas.height = 320;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.drawImage(videoRef.current, 0, 0, 320, 320);
+        const dataUrl = canvas.toDataURL('image/jpeg');
+        setPhotoUrl(dataUrl);
+      }
+      stopCamera();
+    }
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhotoUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleCloseModal = () => {
+    stopCamera();
+    setShowModal(false);
+  };
 
   const fetchGuests = async () => {
     setIsLoading(true);
@@ -78,6 +139,7 @@ export default function GuestsView({ user, currency }: GuestsViewProps) {
     setIdType('Passport');
     setIdNumber('');
     setAddress('');
+    setPhotoUrl('');
     setEmergencyName('');
     setEmergencyPhone('');
     setEmergencyRelationship('');
@@ -95,6 +157,7 @@ export default function GuestsView({ user, currency }: GuestsViewProps) {
     setIdType(guest.idType || 'Passport');
     setIdNumber(guest.idNumber || '');
     setAddress(guest.address || '');
+    setPhotoUrl(guest.photoUrl || '');
     setEmergencyName(guest.emergencyContact?.name || '');
     setEmergencyPhone(guest.emergencyContact?.phone || '');
     setEmergencyRelationship(guest.emergencyContact?.relationship || '');
@@ -114,6 +177,7 @@ export default function GuestsView({ user, currency }: GuestsViewProps) {
       idType,
       idNumber,
       address,
+      photoUrl,
       emergencyContact: {
         name: emergencyName,
         phone: emergencyPhone,
@@ -133,7 +197,7 @@ export default function GuestsView({ user, currency }: GuestsViewProps) {
           body: JSON.stringify(payload)
         });
       }
-      setShowModal(false);
+      handleCloseModal();
       fetchGuests();
     } catch (err: any) {
       setErrorMessage(err.message || 'Error occurred while saving guest.');
@@ -262,8 +326,21 @@ export default function GuestsView({ user, currency }: GuestsViewProps) {
                       className={`hover:bg-slate-50/70 transition-all cursor-pointer ${selectedGuest?.id === g.id ? 'bg-blue-50/40' : ''}`}
                     >
                       <td className="p-4">
-                        <p className="font-semibold text-slate-800">{g.fullName}</p>
-                        <p className="text-[10px] text-slate-400 mt-0.5">ID: {g.id}</p>
+                        <div className="flex items-center gap-3">
+                          <div className="h-8 w-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden shrink-0">
+                            {g.photoUrl ? (
+                              <img src={g.photoUrl} alt={g.fullName} className="h-full w-full object-cover" />
+                            ) : (
+                              <div className="h-full w-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs">
+                                {g.fullName.charAt(0)}
+                              </div>
+                            )}
+                          </div>
+                          <div>
+                            <p className="font-semibold text-slate-800">{g.fullName}</p>
+                            <p className="text-[10px] text-slate-400 mt-0.5">ID: {g.id}</p>
+                          </div>
+                        </div>
                       </td>
                       <td className="p-4">
                         <p className="text-slate-700 font-medium">{g.phone}</p>
@@ -332,12 +409,24 @@ export default function GuestsView({ user, currency }: GuestsViewProps) {
             <div className="flex-1 overflow-y-auto p-5 space-y-6 no-scrollbar text-xs">
               
               {/* Guest Summary Card */}
-              <div className="flex flex-col gap-3">
-                <div>
-                  <h4 className="text-base font-bold text-slate-900">{selectedGuest.fullName}</h4>
-                  <p className="text-[10px] text-slate-400 font-mono">Registered Since: {new Date(selectedGuest.createdAt).toLocaleDateString()}</p>
+              <div className="flex items-start gap-4 pb-4 border-b border-slate-100">
+                <div className="h-16 w-16 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden shrink-0 shadow-sm">
+                  {selectedGuest.photoUrl ? (
+                    <img src={selectedGuest.photoUrl} alt={selectedGuest.fullName} className="h-full w-full object-cover" />
+                  ) : (
+                    <div className="h-full w-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-lg">
+                      {selectedGuest.fullName.charAt(0)}
+                    </div>
+                  )}
                 </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-base font-bold text-slate-900 truncate">{selectedGuest.fullName}</h4>
+                  <p className="text-[10px] text-slate-400 font-mono mt-0.5">ID: {selectedGuest.id}</p>
+                  <p className="text-[10px] text-slate-400 font-mono">Registered: {new Date(selectedGuest.createdAt).toLocaleDateString()}</p>
+                </div>
+              </div>
 
+              <div className="flex flex-col gap-3">
                 <div className="space-y-2 border-t border-slate-100 pt-3 text-slate-600">
                   <div className="flex items-center gap-2">
                     <MapPin className="h-3.5 w-3.5 text-slate-400 shrink-0" />
@@ -429,7 +518,7 @@ export default function GuestsView({ user, currency }: GuestsViewProps) {
               <h3 className="text-sm font-bold text-slate-800 font-display uppercase tracking-wide">
                 {editingGuest ? 'Edit Guest Profile' : 'Register Guest Profile'}
               </h3>
-              <button onClick={() => setShowModal(false)} className="text-slate-400 hover:text-slate-600 p-1">
+              <button onClick={handleCloseModal} className="text-slate-400 hover:text-slate-600 p-1">
                 <X className="h-4 w-4" />
               </button>
             </div>
@@ -445,6 +534,89 @@ export default function GuestsView({ user, currency }: GuestsViewProps) {
               {/* Profile Details */}
               <div className="flex flex-col gap-3">
                 <h4 className="font-bold text-[10px] font-mono uppercase tracking-wider text-blue-600 border-b border-blue-50 pb-1.5">Personal Identity Information</h4>
+
+                {/* Profile Photo Capture section */}
+                <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 flex flex-col gap-3">
+                  <div className="flex items-center gap-4">
+                    <div className="relative h-16 w-16 rounded-full bg-slate-200 border border-slate-300 flex items-center justify-center overflow-hidden shrink-0">
+                      {photoUrl ? (
+                        <img src={photoUrl} alt="Guest Profile" className="h-full w-full object-cover" />
+                      ) : (
+                        <Camera className="h-6 w-6 text-slate-400" />
+                      )}
+                    </div>
+                    <div className="flex-1 flex flex-col gap-1.5">
+                      <p className="font-bold text-[10px] uppercase tracking-wider text-slate-500">Guest Profile Photo</p>
+                      <div className="flex flex-wrap gap-2">
+                        {!isCameraActive ? (
+                          <button
+                            type="button"
+                            onClick={startCamera}
+                            className="flex items-center gap-1 px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg text-[11px] font-semibold border border-blue-200 cursor-pointer transition-colors"
+                          >
+                            <Camera className="h-3.5 w-3.5" />
+                            <span>Take Photo</span>
+                          </button>
+                        ) : (
+                          <div className="flex gap-2">
+                            <button
+                              type="button"
+                              onClick={capturePhoto}
+                              className="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-[11px] font-semibold shadow-sm cursor-pointer transition-colors"
+                            >
+                              Capture
+                            </button>
+                            <button
+                              type="button"
+                              onClick={stopCamera}
+                              className="px-2.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg text-[11px] font-semibold cursor-pointer transition-colors"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        )}
+                        
+                        <label className="flex items-center gap-1 px-2.5 py-1.5 bg-white hover:bg-slate-50 text-slate-600 rounded-lg text-[11px] font-semibold border border-slate-200 cursor-pointer transition-colors">
+                          <Upload className="h-3.5 w-3.5 text-slate-400" />
+                          <span>Upload File</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleFileUpload}
+                            className="hidden"
+                          />
+                        </label>
+                        
+                        {photoUrl && (
+                          <button
+                            type="button"
+                            onClick={() => setPhotoUrl('')}
+                            className="flex items-center gap-1 px-2 py-1.5 text-rose-600 hover:text-rose-700 hover:bg-rose-50 rounded-lg text-[11px] font-semibold cursor-pointer transition-colors"
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Camera view screen */}
+                  {isCameraActive && (
+                    <div className="relative border border-slate-300 rounded-lg overflow-hidden bg-black flex justify-center items-center h-48">
+                      <video
+                        ref={videoRef}
+                        autoPlay
+                        playsInline
+                        muted
+                        className="h-full w-full object-cover"
+                      />
+                      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-full border border-slate-700/50">
+                        <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+                        <span className="text-[10px] font-mono uppercase tracking-widest text-slate-300 font-bold">Camera Live</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
                 
                 <div className="flex flex-col gap-1.5">
                   <label className="text-[10px] font-mono uppercase font-bold tracking-wider text-slate-400">Full Name</label>

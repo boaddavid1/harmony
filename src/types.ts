@@ -54,6 +54,7 @@ export interface Guest {
   idType: string;
   idNumber: string;
   address: string;
+  photoUrl?: string;
   emergencyContact: {
     name: string;
     phone: string;
