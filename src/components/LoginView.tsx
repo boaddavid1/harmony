@@ -85,13 +85,13 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
         <div className="absolute bottom-[-10%] right-[-10%] w-[400px] h-[400px] rounded-full bg-amber-900/10 blur-[120px] pointer-events-none z-10" />
         
         {/* High-Contrast Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/85 to-slate-900/40 z-1" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/65 to-slate-950/20 z-10" />
         
         {/* Luxury Interior Background Image */}
         <img 
           src={hotelCover} 
           alt="Grand Horizon Lobby" 
-          className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60 scale-105 transition-all duration-1000 z-0"
+          className="absolute inset-0 w-full h-full object-cover opacity-85 scale-105 transition-all duration-1000 z-0"
           referrerPolicy="no-referrer"
         />
 
